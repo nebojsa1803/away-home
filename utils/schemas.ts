@@ -7,3 +7,15 @@ export const profileSchema = z.object({
   lastName: z.string().min(2),
   username: z.string().min(2),
 })
+
+export function validateWithZodSchema<T>(
+  schema: ZodSchema<T>,
+  data: unknown
+): T {
+  const resault = schema.safeParse(data)
+  if (!resault.success) {
+    const errors = resault.error.errors.map((error) => error.message)
+    throw new Error(errors.join(','))
+  }
+  return resault.data
+}
